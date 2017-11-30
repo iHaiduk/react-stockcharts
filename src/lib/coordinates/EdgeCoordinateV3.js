@@ -1,130 +1,193 @@
 "use strict";
 
-import React from "react";
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 
-import { hexToRGBA, isDefined, getStrokeDasharray } from "../utils";
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _jsx = function () { var REACT_ELEMENT_TYPE = typeof Symbol === "function" && Symbol.for && Symbol.for("react.element") || 0xeac7; return function createRawReactElement(type, props, key, children) { var defaultProps = type && type.defaultProps; var childrenLength = arguments.length - 3; if (!props && childrenLength !== 0) { props = {}; } if (props && defaultProps) { for (var propName in defaultProps) { if (props[propName] === void 0) { props[propName] = defaultProps[propName]; } } } else if (!props) { props = defaultProps || {}; } if (childrenLength === 1) { props.children = children; } else if (childrenLength > 1) { var childArray = Array(childrenLength); for (var i = 0; i < childrenLength; i++) { childArray[i] = arguments[i + 3]; } props.children = childArray; } return { $$typeof: REACT_ELEMENT_TYPE, type: type, key: key === undefined ? null : '' + key, ref: null, props: props, _owner: null }; }; }();
+
+exports.renderSVG = renderSVG;
+exports.drawOnCanvas = drawOnCanvas;
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _utils = require("../utils");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /* eslint-disable react/prop-types */
-export function renderSVG(props) {
-	const { className } = props;
+function renderSVG(props) {
+	var className = props.className;
 
-	const edge = helper(props);
+
+	var edge = helper(props);
 	if (edge === null) return null;
-	let line, coordinateBase, coordinate;
+	var line = void 0,
+	    coordinateBase = void 0,
+	    coordinate = void 0;
 
-	if (isDefined(edge.line)) {
-		line = <line
-			className="react-stockcharts-cross-hair" opacity={edge.line.opacity} stroke={edge.line.stroke}
-			x1={edge.line.x1} y1={edge.line.y1}
-			x2={edge.line.x2} y2={edge.line.y2} />;
+	if ((0, _utils.isDefined)(edge.line)) {
+		line = _jsx("line", {
+			className: "react-stockcharts-cross-hair",
+			opacity: edge.line.opacity,
+			stroke: edge.line.stroke,
+			x1: edge.line.x1,
+			y1: edge.line.y1,
+			x2: edge.line.x2,
+			y2: edge.line.y2
+		});
 	}
-	if (isDefined(edge.coordinateBase)) {
+	if ((0, _utils.isDefined)(edge.coordinateBase)) {
+		var _edge$coordinateBase = edge.coordinateBase,
+		    rectWidth = _edge$coordinateBase.rectWidth,
+		    rectHeight = _edge$coordinateBase.rectHeight,
+		    arrowWidth = _edge$coordinateBase.arrowWidth;
 
-		const { rectWidth, rectHeight, arrowWidth } = edge.coordinateBase;
 
-		const path = edge.orient === "left"
-			? `M0,0L0,${ rectHeight }L${ rectWidth },${ rectHeight }L${ rectWidth + arrowWidth },10L${ rectWidth },0L0,0L0,0`
-			: `M0,${ arrowWidth }L${ arrowWidth },${ rectHeight }L${ rectWidth + arrowWidth },${ rectHeight }L${ rectWidth + arrowWidth },0L${ arrowWidth },0L0,${ arrowWidth }`;
+		var path = edge.orient === "left" ? "M0,0L0," + rectHeight + "L" + rectWidth + "," + rectHeight + "L" + (rectWidth + arrowWidth) + ",10L" + rectWidth + ",0L0,0L0,0" : "M0," + arrowWidth + "L" + arrowWidth + "," + rectHeight + "L" + (rectWidth + arrowWidth) + "," + rectHeight + "L" + (rectWidth + arrowWidth) + ",0L" + arrowWidth + ",0L0," + arrowWidth;
 
-		coordinateBase = edge.orient === "left" || edge.orient === "right"
-			? <g transform={`translate(${edge.coordinateBase.edgeXRect},${edge.coordinateBase.edgeYRect})`}>
-				<path d={path} key={1} className="react-stockchart-text-background"
-					height={rectHeight} width={rectWidth}
-					fill={edge.coordinateBase.fill} opacity={edge.coordinateBase.opacity} />
-			</g>
-			: <rect key={1} className="react-stockchart-text-background"
-				x={edge.coordinateBase.edgeXRect}
-				y={edge.coordinateBase.edgeYRect}
-				height={rectHeight} width={rectWidth}
-				fill={edge.coordinateBase.fill} opacity={edge.coordinateBase.opacity} />;
+		coordinateBase = edge.orient === "left" || edge.orient === "right" ? _jsx("g", {
+			transform: "translate(" + edge.coordinateBase.edgeXRect + "," + edge.coordinateBase.edgeYRect + ")"
+		}, void 0, _jsx("path", {
+			d: path,
+			className: "react-stockchart-text-background",
+			height: rectHeight,
+			width: rectWidth,
+			fill: edge.coordinateBase.fill,
+			opacity: edge.coordinateBase.opacity
+		}, 1)) : _jsx("rect", {
+			className: "react-stockchart-text-background",
+			x: edge.coordinateBase.edgeXRect,
+			y: edge.coordinateBase.edgeYRect,
+			height: rectHeight,
+			width: rectWidth,
+			fill: edge.coordinateBase.fill,
+			opacity: edge.coordinateBase.opacity
+		}, 1);
 
-		coordinate = (<text key={2} x={edge.coordinate.edgeXText}
-			y={edge.coordinate.edgeYText}
-			textAnchor={edge.coordinate.textAnchor}
-			fontFamily={edge.coordinate.fontFamily}
-			fontSize={edge.coordinate.fontSize}
-			dy=".32em" fill={edge.coordinate.textFill} >{edge.coordinate.displayCoordinate}</text>);
+		coordinate = _jsx("text", {
+			x: edge.coordinate.edgeXText,
+			y: edge.coordinate.edgeYText,
+			textAnchor: edge.coordinate.textAnchor,
+			fontFamily: edge.coordinate.fontFamily,
+			fontSize: edge.coordinate.fontSize,
+			dy: ".32em",
+			fill: edge.coordinate.textFill
+		}, 2, edge.coordinate.displayCoordinate);
 	}
-	return (
-		<g className={className}>
-			{line}
-			{coordinateBase}
-			{coordinate}
-		</g>
-	);
+	return _jsx("g", {
+		className: className
+	}, void 0, line, coordinateBase, coordinate);
 }
 /* eslint-enable react/prop-types */
 
 function helper(props) {
-	const { coordinate: displayCoordinate, show, type, orient, edgeAt, hideLine, lineStrokeDasharray } = props;
-	const { fill, opacity, fontFamily, fontSize, textFill, lineStroke, lineOpacity } = props;
-	const { stroke, strokeOpacity, strokeWidth } = props;
-	const { arrowWidth, rectWidth, rectHeight, rectRadius } = props;
-	const { x1, y1, x2, y2, dx } = props;
+	var displayCoordinate = props.coordinate,
+	    show = props.show,
+	    type = props.type,
+	    orient = props.orient,
+	    edgeAt = props.edgeAt,
+	    hideLine = props.hideLine,
+	    lineStrokeDasharray = props.lineStrokeDasharray;
+	var fill = props.fill,
+	    opacity = props.opacity,
+	    fontFamily = props.fontFamily,
+	    fontSize = props.fontSize,
+	    textFill = props.textFill,
+	    lineStroke = props.lineStroke,
+	    lineOpacity = props.lineOpacity;
+	var stroke = props.stroke,
+	    strokeOpacity = props.strokeOpacity,
+	    strokeWidth = props.strokeWidth;
+	var arrowWidth = props.arrowWidth,
+	    rectWidth = props.rectWidth,
+	    rectHeight = props.rectHeight,
+	    rectRadius = props.rectRadius;
+	var x1 = props.x1,
+	    y1 = props.y1,
+	    x2 = props.x2,
+	    y2 = props.y2,
+	    dx = props.dx;
+
 
 	if (!show) return null;
 
-	let coordinateBase, coordinate;
-	if (isDefined(displayCoordinate)) {
-		const textAnchor = "middle"; // TODO: Below it is necessary to implement logic for the possibility of alignment from the right or from the left.
+	var coordinateBase = void 0,
+	    coordinate = void 0;
+	if ((0, _utils.isDefined)(displayCoordinate)) {
+		var textAnchor = "middle"; // TODO: Below it is necessary to implement logic for the possibility of alignment from the right or from the left.
 
-		let edgeXRect, edgeYRect, edgeXText, edgeYText;
+		var edgeXRect = void 0,
+		    edgeYRect = void 0,
+		    edgeXText = void 0,
+		    edgeYText = void 0;
 
 		if (type === "horizontal") {
-			edgeXRect = dx + ((orient === "right") ? edgeAt + 1 : edgeAt - rectWidth - 1);
-			edgeYRect = y1 - (rectHeight / 2);
-			edgeXText = dx + ((orient === "right") ? edgeAt + (rectWidth / 2) : edgeAt - (rectWidth / 2));
+			edgeXRect = dx + (orient === "right" ? edgeAt + 1 : edgeAt - rectWidth - 1);
+			edgeYRect = y1 - rectHeight / 2;
+			edgeXText = dx + (orient === "right" ? edgeAt + rectWidth / 2 : edgeAt - rectWidth / 2);
 			edgeYText = y1;
 		} else {
-			edgeXRect = x1 - (rectWidth / 2);
-			edgeYRect = (orient === "bottom") ? edgeAt : edgeAt - rectHeight;
+			edgeXRect = x1 - rectWidth / 2;
+			edgeYRect = orient === "bottom" ? edgeAt : edgeAt - rectHeight;
 			edgeXText = x1;
-			edgeYText = (orient === "bottom") ? edgeAt + (rectHeight / 2) : edgeAt - (rectHeight / 2);
+			edgeYText = orient === "bottom" ? edgeAt + rectHeight / 2 : edgeAt - rectHeight / 2;
 		}
 
 		coordinateBase = {
-			edgeXRect, edgeYRect, rectHeight, rectWidth, rectRadius, fill, opacity, arrowWidth, stroke, strokeOpacity, strokeWidth
+			edgeXRect: edgeXRect, edgeYRect: edgeYRect, rectHeight: rectHeight, rectWidth: rectWidth, rectRadius: rectRadius, fill: fill, opacity: opacity, arrowWidth: arrowWidth, stroke: stroke, strokeOpacity: strokeOpacity, strokeWidth: strokeWidth
 		};
 		coordinate = {
-			edgeXText, edgeYText, textAnchor, fontFamily, fontSize, textFill, displayCoordinate
+			edgeXText: edgeXText, edgeYText: edgeYText, textAnchor: textAnchor, fontFamily: fontFamily, fontSize: fontSize, textFill: textFill, displayCoordinate: displayCoordinate
 		};
 	}
 
-	const line = hideLine ? undefined : {
+	var line = hideLine ? undefined : {
 		opacity: lineOpacity,
 		stroke: lineStroke,
 		strokeDasharray: lineStrokeDasharray,
-		x1, y1, x2, y2
+		x1: x1, y1: y1, x2: x2, y2: y2
 	};
 
 	return {
-		coordinateBase, coordinate, line, orient
+		coordinateBase: coordinateBase, coordinate: coordinate, line: line, orient: orient
 	};
 }
 
-export function drawOnCanvas(ctx, props) {
-	const { fontSize, fontFamily } = props;
+function drawOnCanvas(ctx, props) {
+	var fontSize = props.fontSize,
+	    fontFamily = props.fontFamily;
 
-	ctx.font = `${fontSize}px ${fontFamily}`;
+
+	ctx.font = fontSize + "px " + fontFamily;
 	ctx.textBaseline = "middle";
-	const width = ctx.measureText(props.coordinate).width + 10;
+	var width = ctx.measureText(props.coordinate).width + 10;
 
-	const edge = helper({ ...props, rectWidth: width });
+	var edge = helper(_extends({}, props, { rectWidth: width }));
 
 	if (edge === null) return;
 
-	if (isDefined(edge.coordinateBase)) {
-		const { rectWidth, rectHeight, rectRadius, arrowWidth } = edge.coordinateBase;
+	if ((0, _utils.isDefined)(edge.coordinateBase)) {
+		var _edge$coordinateBase2 = edge.coordinateBase,
+		    rectWidth = _edge$coordinateBase2.rectWidth,
+		    rectHeight = _edge$coordinateBase2.rectHeight,
+		    rectRadius = _edge$coordinateBase2.rectRadius,
+		    arrowWidth = _edge$coordinateBase2.arrowWidth;
 
-		ctx.fillStyle = hexToRGBA(edge.coordinateBase.fill, edge.coordinateBase.opacity);
-		if (isDefined(edge.coordinateBase.stroke)) {
-			ctx.strokeStyle = hexToRGBA(edge.coordinateBase.stroke, edge.coordinateBase.strokeOpacity);
+
+		ctx.fillStyle = (0, _utils.hexToRGBA)(edge.coordinateBase.fill, edge.coordinateBase.opacity);
+		if ((0, _utils.isDefined)(edge.coordinateBase.stroke)) {
+			ctx.strokeStyle = (0, _utils.hexToRGBA)(edge.coordinateBase.stroke, edge.coordinateBase.strokeOpacity);
 			ctx.lineWidth = edge.coordinateBase.strokeWidth;
 		}
 
-		let x = edge.coordinateBase.edgeXRect;
-		const y = edge.coordinateBase.edgeYRect;
-		const halfHeight = rectHeight / 2;
+		var x = edge.coordinateBase.edgeXRect;
+		var y = edge.coordinateBase.edgeYRect;
+		var halfHeight = rectHeight / 2;
 
 		ctx.beginPath();
 		if (edge.orient === "right") {
@@ -152,7 +215,7 @@ export function drawOnCanvas(ctx, props) {
 		}
 		ctx.fill();
 
-		if (isDefined(edge.coordinateBase.stroke)) {
+		if ((0, _utils.isDefined)(edge.coordinateBase.stroke)) {
 			ctx.stroke();
 		}
 
@@ -161,10 +224,12 @@ export function drawOnCanvas(ctx, props) {
 		ctx.fillText(edge.coordinate.displayCoordinate, edge.coordinate.edgeXText, edge.coordinate.edgeYText);
 	}
 
-	if (isDefined(edge.line)) {
-		const dashArray = getStrokeDasharray(edge.line.strokeDasharray).split(",").map(d => +d);
+	if ((0, _utils.isDefined)(edge.line)) {
+		var dashArray = (0, _utils.getStrokeDasharray)(edge.line.strokeDasharray).split(",").map(function (d) {
+			return +d;
+		});
 		ctx.setLineDash(dashArray);
-		ctx.strokeStyle = hexToRGBA(edge.line.stroke, edge.line.opacity);
+		ctx.strokeStyle = (0, _utils.hexToRGBA)(edge.line.stroke, edge.line.opacity);
 		ctx.lineWidth = 1;
 		ctx.beginPath();
 		ctx.moveTo(edge.line.x1, edge.line.y1);
@@ -188,3 +253,4 @@ function roundRect(ctx, x, y, width, height, radius) {
 }
 
 // export default EdgeCoordinate;
+//# sourceMappingURL=EdgeCoordinateV3.js.map

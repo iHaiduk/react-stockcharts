@@ -1,115 +1,191 @@
 "use strict";
 
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { area as d3Area } from "d3-shape";
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 
-import GenericChartComponent from "../GenericChartComponent";
-import { getAxisCanvas } from "../GenericComponent";
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-import { hexToRGBA, isDefined, first, functor } from "../utils";
+var _jsx = function () { var REACT_ELEMENT_TYPE = typeof Symbol === "function" && Symbol.for && Symbol.for("react.element") || 0xeac7; return function createRawReactElement(type, props, key, children) { var defaultProps = type && type.defaultProps; var childrenLength = arguments.length - 3; if (!props && childrenLength !== 0) { props = {}; } if (props && defaultProps) { for (var propName in defaultProps) { if (props[propName] === void 0) { props[propName] = defaultProps[propName]; } } } else if (!props) { props = defaultProps || {}; } if (childrenLength === 1) { props.children = children; } else if (childrenLength > 1) { var childArray = Array(childrenLength); for (var i = 0; i < childrenLength; i++) { childArray[i] = arguments[i + 3]; } props.children = childArray; } return { $$typeof: REACT_ELEMENT_TYPE, type: type, key: key === undefined ? null : '' + key, ref: null, props: props, _owner: null }; }; }();
 
-class AreaOnlySeries extends Component {
-	constructor(props) {
-		super(props);
-		this.renderSVG = this.renderSVG.bind(this);
-		this.drawOnCanvas = this.drawOnCanvas.bind(this);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = require("prop-types");
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _d3Shape = require("d3-shape");
+
+var _GenericChartComponent = require("../GenericChartComponent");
+
+var _GenericChartComponent2 = _interopRequireDefault(_GenericChartComponent);
+
+var _GenericComponent = require("../GenericComponent");
+
+var _utils = require("../utils");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var AreaOnlySeries = function (_Component) {
+	_inherits(AreaOnlySeries, _Component);
+
+	function AreaOnlySeries(props) {
+		_classCallCheck(this, AreaOnlySeries);
+
+		var _this = _possibleConstructorReturn(this, (AreaOnlySeries.__proto__ || Object.getPrototypeOf(AreaOnlySeries)).call(this, props));
+
+		_this.renderSVG = _this.renderSVG.bind(_this);
+		_this.drawOnCanvas = _this.drawOnCanvas.bind(_this);
+		return _this;
 	}
-	drawOnCanvas(ctx, moreProps) {
-		const { yAccessor, defined, base } = this.props;
-		const { fill, stroke, opacity } = this.props;
 
-		const { xScale, chartConfig: { yScale }, plotData, xAccessor } = moreProps;
+	_createClass(AreaOnlySeries, [{
+		key: "drawOnCanvas",
+		value: function drawOnCanvas(ctx, moreProps) {
+			var _props = this.props,
+			    yAccessor = _props.yAccessor,
+			    defined = _props.defined,
+			    base = _props.base;
+			var _props2 = this.props,
+			    fill = _props2.fill,
+			    stroke = _props2.stroke,
+			    opacity = _props2.opacity;
+			var xScale = moreProps.xScale,
+			    yScale = moreProps.chartConfig.yScale,
+			    plotData = moreProps.plotData,
+			    xAccessor = moreProps.xAccessor;
 
-		const newBase = functor(base);
 
-		ctx.fillStyle = hexToRGBA(fill, opacity);
-		ctx.strokeStyle = stroke;
+			var newBase = (0, _utils.functor)(base);
 
-		let points0 = [], points1 = [];
+			ctx.fillStyle = (0, _utils.hexToRGBA)(fill, opacity);
+			ctx.strokeStyle = stroke;
 
-		for (let i = 0; i < plotData.length; i++) {
-			const d = plotData[i];
-			if (defined(yAccessor(d), i)) {
-				const [x, y1, y0] = [xScale(xAccessor(d)), yScale(yAccessor(d)), newBase(yScale, d)];
+			var points0 = [],
+			    points1 = [];
 
-				points0.push([x, y0]);
-				points1.push([x, y1]);
-			} else if (points0.length) {
-				segment(points0, points1, ctx);
-				points0 = [];
-				points1 = [];
+			for (var i = 0; i < plotData.length; i++) {
+				var d = plotData[i];
+				if (defined(yAccessor(d), i)) {
+					var _ref = [xScale(xAccessor(d)), yScale(yAccessor(d)), newBase(yScale, d)],
+					    x = _ref[0],
+					    y1 = _ref[1],
+					    y0 = _ref[2];
+
+
+					points0.push([x, y0]);
+					points1.push([x, y1]);
+				} else if (points0.length) {
+					segment(points0, points1, ctx);
+					points0 = [];
+					points1 = [];
+				}
 			}
+			if (points0.length) segment(points0, points1, ctx);
 		}
-		if (points0.length) segment(points0, points1, ctx);
-	}
-	renderSVG(moreProps) {
-		const { yAccessor, defined, base } = this.props;
-		const { stroke, fill, className, opacity } = this.props;
+	}, {
+		key: "renderSVG",
+		value: function renderSVG(moreProps) {
+			var _props3 = this.props,
+			    yAccessor = _props3.yAccessor,
+			    defined = _props3.defined,
+			    base = _props3.base;
+			var _props4 = this.props,
+			    stroke = _props4.stroke,
+			    fill = _props4.fill,
+			    className = _props4.className,
+			    opacity = _props4.opacity;
+			var xScale = moreProps.xScale,
+			    yScale = moreProps.chartConfig.yScale,
+			    plotData = moreProps.plotData,
+			    xAccessor = moreProps.xAccessor;
 
-		const { xScale, chartConfig: { yScale }, plotData, xAccessor } = moreProps;
 
-		const newBase = functor(base);
-		const areaSeries = d3Area()
-			.defined(d => defined(yAccessor(d)))
-			.x((d) => xScale(xAccessor(d)))
-			.y0(newBase.bind(null, yScale))
-			.y1((d) => yScale(yAccessor(d)));
+			var newBase = (0, _utils.functor)(base);
+			var areaSeries = (0, _d3Shape.area)().defined(function (d) {
+				return defined(yAccessor(d));
+			}).x(function (d) {
+				return xScale(xAccessor(d));
+			}).y0(newBase.bind(null, yScale)).y1(function (d) {
+				return yScale(yAccessor(d));
+			});
 
-		const d = areaSeries(plotData);
-		const newClassName = className.concat(isDefined(stroke) ? "" : " line-stroke");
-		return (
-			<path d={d} stroke={stroke} fill={fill} className={newClassName} opacity={opacity} />
-		);
-	}
-	render() {
-		return <GenericChartComponent
-			svgDraw={this.renderSVG}
-			canvasDraw={this.drawOnCanvas}
-			canvasToDraw={getAxisCanvas}
-			drawOn={["pan"]}
-		/>;
-	}
-}
+			var d = areaSeries(plotData);
+			var newClassName = className.concat((0, _utils.isDefined)(stroke) ? "" : " line-stroke");
+			return _jsx("path", {
+				d: d,
+				stroke: stroke,
+				fill: fill,
+				className: newClassName,
+				opacity: opacity
+			});
+		}
+	}, {
+		key: "render",
+		value: function render() {
+			return _jsx(_GenericChartComponent2.default, {
+				svgDraw: this.renderSVG,
+				canvasDraw: this.drawOnCanvas,
+				canvasToDraw: _GenericComponent.getAxisCanvas,
+				drawOn: ["pan"]
+			});
+		}
+	}]);
 
-AreaOnlySeries.propTypes = {
-	className: PropTypes.string,
-	yAccessor: PropTypes.func.isRequired,
-	stroke: PropTypes.string,
-	fill: PropTypes.string,
-	opacity: PropTypes.number,
-	defined: PropTypes.func,
-	base: PropTypes.oneOfType([
-		PropTypes.func, PropTypes.number
-	]),
-};
+	return AreaOnlySeries;
+}(_react.Component);
 
 AreaOnlySeries.defaultProps = {
 	className: "line ",
 	fill: "none",
 	opacity: 1,
-	defined: d => !isNaN(d),
-	base: (yScale/* , d*/) => first(yScale.range()),
+	defined: function defined(d) {
+		return !isNaN(d);
+	},
+	base: function base(yScale /* , d*/) {
+		return (0, _utils.first)(yScale.range());
+	}
 };
-
 
 function segment(points0, points1, ctx) {
 	ctx.beginPath();
-	const [x0, y0] = first(points0);
+
+	var _first = (0, _utils.first)(points0),
+	    _first2 = _slicedToArray(_first, 2),
+	    x0 = _first2[0],
+	    y0 = _first2[1];
+
 	ctx.moveTo(x0, y0);
 
-	let i;
+	var i = void 0;
 	for (i = 0; i < points1.length; i++) {
-		const [x1, y1] = points1[i];
+		var _points1$i = _slicedToArray(points1[i], 2),
+		    x1 = _points1$i[0],
+		    y1 = _points1$i[1];
+
 		ctx.lineTo(x1, y1);
 	}
 
 	for (i = points0.length - 1; i >= 0; i--) {
-		const [x0, y0] = points0[i];
-		ctx.lineTo(x0, y0);
+		var _points0$i = _slicedToArray(points0[i], 2),
+		    _x = _points0$i[0],
+		    _y = _points0$i[1];
+
+		ctx.lineTo(_x, _y);
 	}
 	ctx.closePath();
 	ctx.fill();
 }
 
-export default AreaOnlySeries;
+exports.default = AreaOnlySeries;
+//# sourceMappingURL=AreaOnlySeries.js.map

@@ -1,115 +1,141 @@
 "use strict";
 
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 
-import { isDefined, noop, mapObject, head } from "../utils";
-import { getMorePropsForChart, getSelected } from "./utils";
+var _jsx = function () { var REACT_ELEMENT_TYPE = typeof Symbol === "function" && Symbol.for && Symbol.for("react.element") || 0xeac7; return function createRawReactElement(type, props, key, children) { var defaultProps = type && type.defaultProps; var childrenLength = arguments.length - 3; if (!props && childrenLength !== 0) { props = {}; } if (props && defaultProps) { for (var propName in defaultProps) { if (props[propName] === void 0) { props[propName] = defaultProps[propName]; } } } else if (!props) { props = defaultProps || {}; } if (childrenLength === 1) { props.children = children; } else if (childrenLength > 1) { var childArray = Array(childrenLength); for (var i = 0; i < childrenLength; i++) { childArray[i] = arguments[i + 3]; } props.children = childArray; } return { $$typeof: REACT_ELEMENT_TYPE, type: type, key: key === undefined ? null : '' + key, ref: null, props: props, _owner: null }; }; }();
 
-import GenericComponent, { getMouseCanvas } from "../GenericComponent";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-class DrawingObjectSelector extends Component {
-	constructor(props) {
-		super(props);
-		this.handleClick = this.handleClick.bind(this);
-		this.handleDoubleClick = this.handleDoubleClick.bind(this);
-		this.getInteraction = this.getInteraction.bind(this);
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = require("prop-types");
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _utils = require("../utils");
+
+var _utils2 = require("./utils");
+
+var _GenericComponent = require("../GenericComponent");
+
+var _GenericComponent2 = _interopRequireDefault(_GenericComponent);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var DrawingObjectSelector = function (_Component) {
+	_inherits(DrawingObjectSelector, _Component);
+
+	function DrawingObjectSelector(props) {
+		_classCallCheck(this, DrawingObjectSelector);
+
+		var _this = _possibleConstructorReturn(this, (DrawingObjectSelector.__proto__ || Object.getPrototypeOf(DrawingObjectSelector)).call(this, props));
+
+		_this.handleClick = _this.handleClick.bind(_this);
+		_this.handleDoubleClick = _this.handleDoubleClick.bind(_this);
+		_this.getInteraction = _this.getInteraction.bind(_this);
+		return _this;
 	}
-	handleDoubleClick(moreProps, e) {
-		console.log("Double Click");
 
-		e.preventDefault();
-		const { onDoubleClick } = this.props;
-		const { enabled } = this.props;
-		if (!enabled) return;
+	_createClass(DrawingObjectSelector, [{
+		key: "handleDoubleClick",
+		value: function handleDoubleClick(moreProps, e) {
+			console.log("Double Click");
 
-		const interactives = this.getInteraction(moreProps);
-		const selected = getSelected(interactives);
+			e.preventDefault();
+			var onDoubleClick = this.props.onDoubleClick;
+			var enabled = this.props.enabled;
 
-		// console.log(selected, interactives)
-		if (selected.length > 0) {
-			const item = head(selected);
-			const morePropsForChart = getMorePropsForChart(
-				moreProps, item.chartId
-			);
-			onDoubleClick(item, morePropsForChart);
+			if (!enabled) return;
+
+			var interactives = this.getInteraction(moreProps);
+			var selected = (0, _utils2.getSelected)(interactives);
+
+			// console.log(selected, interactives)
+			if (selected.length > 0) {
+				var item = (0, _utils.head)(selected);
+				var morePropsForChart = (0, _utils2.getMorePropsForChart)(moreProps, item.chartId);
+				onDoubleClick(item, morePropsForChart);
+			}
 		}
-	}
-	handleClick(moreProps, e) {
-		e.preventDefault();
-		const { onSelect } = this.props;
-		const { enabled } = this.props;
-		if (!enabled) return;
+	}, {
+		key: "handleClick",
+		value: function handleClick(moreProps, e) {
+			e.preventDefault();
+			var onSelect = this.props.onSelect;
+			var enabled = this.props.enabled;
 
-		const interactives = this.getInteraction(moreProps);
+			if (!enabled) return;
 
-		onSelect(interactives, moreProps);
-	}
-	getInteraction(moreProps) {
-		const { getInteractiveNodes, drawingObjectMap } = this.props;
-		const interactiveNodes = getInteractiveNodes();
-		const interactives = mapObject(interactiveNodes, each => {
-			const key = drawingObjectMap[each.type];
+			var interactives = this.getInteraction(moreProps);
 
-			const valueArray = isDefined(key)
-				? each.node.props[key]
-				: undefined;
+			onSelect(interactives, moreProps);
+		}
+	}, {
+		key: "getInteraction",
+		value: function getInteraction(moreProps) {
+			var _props = this.props,
+			    getInteractiveNodes = _props.getInteractiveNodes,
+			    drawingObjectMap = _props.drawingObjectMap;
 
-			const valuePresent = isDefined(valueArray)
-				&& Array.isArray(valueArray)
-				&& valueArray.length > 0;
-			if (valuePresent) {
-				// console.log("Value present for ", each.type, each.chartId);
-				const morePropsForChart = getMorePropsForChart(
-					moreProps, each.chartId
-				);
+			var interactiveNodes = getInteractiveNodes();
+			var interactives = (0, _utils.mapObject)(interactiveNodes, function (each) {
+				var key = drawingObjectMap[each.type];
 
-				const objects = each.node.getSelectionState(morePropsForChart);
+				var valueArray = (0, _utils.isDefined)(key) ? each.node.props[key] : undefined;
 
+				var valuePresent = (0, _utils.isDefined)(valueArray) && Array.isArray(valueArray) && valueArray.length > 0;
+				if (valuePresent) {
+					// console.log("Value present for ", each.type, each.chartId);
+					var morePropsForChart = (0, _utils2.getMorePropsForChart)(moreProps, each.chartId);
+
+					var objects = each.node.getSelectionState(morePropsForChart);
+
+					return {
+						type: each.type,
+						chartId: each.chartId,
+						objects: objects
+					};
+				}
 				return {
 					type: each.type,
 					chartId: each.chartId,
-					objects,
+					objects: []
 				};
-			}
-			return {
-				type: each.type,
-				chartId: each.chartId,
-				objects: [],
-			};
-		});
+			});
 
-		return interactives;
-	}
+			return interactives;
+		}
+	}, {
+		key: "render",
+		value: function render() {
+			return _jsx(_GenericComponent2.default, {
+				svgDraw: _utils.noop,
+				canvasToDraw: _GenericComponent.getMouseCanvas,
+				canvasDraw: _utils.noop,
+				onMouseDown: this.handleClick,
+				onDoubleClick: this.handleDoubleClick,
+				drawOn: ["mousemove", "pan", "drag"]
+			});
+		}
+	}]);
 
-	render() {
-		return (
-			<GenericComponent
-				svgDraw={noop}
-				canvasToDraw={getMouseCanvas}
-				canvasDraw={noop}
-
-				onMouseDown={this.handleClick}
-				onDoubleClick={this.handleDoubleClick}
-
-				drawOn={["mousemove", "pan", "drag"]}
-			/>
-		);
-	}
-}
-
-
-DrawingObjectSelector.propTypes = {
-	getInteractiveNodes: PropTypes.func.isRequired,
-	onSelect: PropTypes.func.isRequired,
-	onDoubleClick: PropTypes.func.isRequired,
-	drawingObjectMap: PropTypes.object.isRequired,
-	enabled: PropTypes.bool.isRequired,
-};
+	return DrawingObjectSelector;
+}(_react.Component);
 
 DrawingObjectSelector.defaultProps = {
 	enabled: true,
-	onDoubleClick: noop,
+	onDoubleClick: _utils.noop
 };
 
-export default DrawingObjectSelector;
+exports.default = DrawingObjectSelector;
+//# sourceMappingURL=DrawingObjectSelector.js.map

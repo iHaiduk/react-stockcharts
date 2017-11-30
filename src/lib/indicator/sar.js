@@ -1,37 +1,48 @@
 "use strict";
 
-import { rebind, merge } from "../utils";
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 
-import { sar } from "../calculator";
+exports.default = function () {
 
-import baseIndicator from "./baseIndicator";
+	var base = (0, _baseIndicator2.default)().type(ALGORITHM_TYPE).accessor(function (d) {
+		return d.sar;
+	});
 
-const ALGORITHM_TYPE = "SMA";
+	var underlyingAlgorithm = (0, _calculator.sar)();
 
-export default function() {
+	var mergedAlgorithm = (0, _utils.merge)().algorithm(underlyingAlgorithm).merge(function (datum, indicator) {
+		datum.sar = indicator;
+	});
 
-	const base = baseIndicator()
-		.type(ALGORITHM_TYPE)
-		.accessor(d => d.sar);
+	var indicator = function indicator(data) {
+		var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : { merge: true };
 
-	const underlyingAlgorithm = sar();
-
-	const mergedAlgorithm = merge()
-		.algorithm(underlyingAlgorithm)
-		.merge((datum, indicator) => { datum.sar = indicator; });
-
-	const indicator = function(data, options = { merge: true }) {
 		if (options.merge) {
-			if (!base.accessor()) throw new Error(`Set an accessor to ${ALGORITHM_TYPE} before calculating`);
+			if (!base.accessor()) throw new Error("Set an accessor to " + ALGORITHM_TYPE + " before calculating");
 			return mergedAlgorithm(data);
 		}
 		return underlyingAlgorithm(data);
 	};
 
-	rebind(indicator, base, "id", "accessor", "stroke", "echo", "type");
-	rebind(indicator, underlyingAlgorithm, "undefinedLength");
-	rebind(indicator, underlyingAlgorithm, "options");
-	rebind(indicator, mergedAlgorithm, "merge");
+	(0, _utils.rebind)(indicator, base, "id", "accessor", "stroke", "echo", "type");
+	(0, _utils.rebind)(indicator, underlyingAlgorithm, "undefinedLength");
+	(0, _utils.rebind)(indicator, underlyingAlgorithm, "options");
+	(0, _utils.rebind)(indicator, mergedAlgorithm, "merge");
 
 	return indicator;
-}
+};
+
+var _utils = require("../utils");
+
+var _calculator = require("../calculator");
+
+var _baseIndicator = require("./baseIndicator");
+
+var _baseIndicator2 = _interopRequireDefault(_baseIndicator);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var ALGORITHM_TYPE = "SMA";
+//# sourceMappingURL=sar.js.map

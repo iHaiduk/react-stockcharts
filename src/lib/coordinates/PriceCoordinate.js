@@ -1,62 +1,79 @@
 "use strict";
 
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 
-import { drawOnCanvas, renderSVG } from "./EdgeCoordinateV3";
-import GenericChartComponent from "../GenericChartComponent";
-import { getAxisCanvas } from "../GenericComponent";
-import { functor } from "../utils";
+var _jsx = function () { var REACT_ELEMENT_TYPE = typeof Symbol === "function" && Symbol.for && Symbol.for("react.element") || 0xeac7; return function createRawReactElement(type, props, key, children) { var defaultProps = type && type.defaultProps; var childrenLength = arguments.length - 3; if (!props && childrenLength !== 0) { props = {}; } if (props && defaultProps) { for (var propName in defaultProps) { if (props[propName] === void 0) { props[propName] = defaultProps[propName]; } } } else if (!props) { props = defaultProps || {}; } if (childrenLength === 1) { props.children = children; } else if (childrenLength > 1) { var childArray = Array(childrenLength); for (var i = 0; i < childrenLength; i++) { childArray[i] = arguments[i + 3]; } props.children = childArray; } return { $$typeof: REACT_ELEMENT_TYPE, type: type, key: key === undefined ? null : '' + key, ref: null, props: props, _owner: null }; }; }();
 
-class PriceCoordinate extends Component {
-	constructor(props) {
-		super(props);
-		this.renderSVG = this.renderSVG.bind(this);
-		this.drawOnCanvas = this.drawOnCanvas.bind(this);
-	}
-	drawOnCanvas(ctx, moreProps) {
-		const props = helper(this.props, moreProps);
-		drawOnCanvas(ctx, props);
-	}
-	renderSVG(moreProps) {
-		const props = helper(this.props, moreProps);
-		return renderSVG(props);
-	}
-	render() {
-		return <GenericChartComponent
-			clip={false}
-			svgDraw={this.renderSVG}
-			canvasDraw={this.drawOnCanvas}
-			canvasToDraw={getAxisCanvas}
-			drawOn={["pan"]}
-		/>;
-	}
-}
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-PriceCoordinate.propTypes = {
-	displayFormat: PropTypes.func.isRequired,
-	yAxisPad: PropTypes.number,
-	rectWidth: PropTypes.number,
-	rectHeight: PropTypes.number,
-	orient: PropTypes.oneOf(["bottom", "top", "left", "right"]),
-	at: PropTypes.oneOf(["bottom", "top", "left", "right"]),
-	price: PropTypes.number,
-	dx: PropTypes.number,
-	arrowWidth: PropTypes.number,
-	opacity: PropTypes.number,
-	lineOpacity: PropTypes.number,
-	lineStroke: PropTypes.string,
-	fontFamily: PropTypes.string,
-	fontSize: PropTypes.number,
-	fill: PropTypes.oneOfType([
-		PropTypes.string,
-		PropTypes.func,
-	]),
-	textFill: PropTypes.oneOfType([
-		PropTypes.string,
-		PropTypes.func,
-	]),
-};
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = require("prop-types");
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _EdgeCoordinateV = require("./EdgeCoordinateV3");
+
+var _GenericChartComponent = require("../GenericChartComponent");
+
+var _GenericChartComponent2 = _interopRequireDefault(_GenericChartComponent);
+
+var _GenericComponent = require("../GenericComponent");
+
+var _utils = require("../utils");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var PriceCoordinate = function (_Component) {
+	_inherits(PriceCoordinate, _Component);
+
+	function PriceCoordinate(props) {
+		_classCallCheck(this, PriceCoordinate);
+
+		var _this = _possibleConstructorReturn(this, (PriceCoordinate.__proto__ || Object.getPrototypeOf(PriceCoordinate)).call(this, props));
+
+		_this.renderSVG = _this.renderSVG.bind(_this);
+		_this.drawOnCanvas = _this.drawOnCanvas.bind(_this);
+		return _this;
+	}
+
+	_createClass(PriceCoordinate, [{
+		key: "drawOnCanvas",
+		value: function drawOnCanvas(ctx, moreProps) {
+			var props = helper(this.props, moreProps);
+			(0, _EdgeCoordinateV.drawOnCanvas)(ctx, props);
+		}
+	}, {
+		key: "renderSVG",
+		value: function renderSVG(moreProps) {
+			var props = helper(this.props, moreProps);
+			return (0, _EdgeCoordinateV.renderSVG)(props);
+		}
+	}, {
+		key: "render",
+		value: function render() {
+			return _jsx(_GenericChartComponent2.default, {
+				clip: false,
+				svgDraw: this.renderSVG,
+				canvasDraw: this.drawOnCanvas,
+				canvasToDraw: _GenericComponent.getAxisCanvas,
+				drawOn: ["pan"]
+			});
+		}
+	}]);
+
+	return PriceCoordinate;
+}(_react.Component);
 
 PriceCoordinate.defaultProps = {
 	yAxisPad: 0,
@@ -73,65 +90,79 @@ PriceCoordinate.defaultProps = {
 	lineStroke: "#000000",
 	fontFamily: "Helvetica Neue, Helvetica, Arial, sans-serif",
 	fontSize: 13,
-	textFill: "#FFFFFF",
+	textFill: "#FFFFFF"
 };
 
 function helper(props, moreProps) {
-	const { width } = moreProps;
-	const { chartConfig: { yScale } } = moreProps;
-	const lowerPrice = yScale.domain()[0];
-	const upperPrice = yScale.domain()[1];
-	const lowerYValue = yScale.range()[0];
-	const upperYValue = yScale.range()[1];
-	const rangeSlope = (lowerPrice - upperPrice) / (lowerYValue - upperYValue);
+	var width = moreProps.width;
+	var yScale = moreProps.chartConfig.yScale;
 
-	const { orient, at, rectWidth, rectHeight, displayFormat, dx, price } = props;
-	const { fill, opacity, fontFamily, fontSize, textFill, arrowWidth, lineOpacity, lineStroke } = props;
+	var lowerPrice = yScale.domain()[0];
+	var upperPrice = yScale.domain()[1];
+	var lowerYValue = yScale.range()[0];
+	var upperYValue = yScale.range()[1];
+	var rangeSlope = (lowerPrice - upperPrice) / (lowerYValue - upperYValue);
 
-	const x1 = 0, x2 = width;
-	const edgeAt = (at === "right")
-		? width
-		: 0;
+	var orient = props.orient,
+	    at = props.at,
+	    rectWidth = props.rectWidth,
+	    rectHeight = props.rectHeight,
+	    displayFormat = props.displayFormat,
+	    dx = props.dx,
+	    price = props.price;
+	var fill = props.fill,
+	    opacity = props.opacity,
+	    fontFamily = props.fontFamily,
+	    fontSize = props.fontSize,
+	    textFill = props.textFill,
+	    arrowWidth = props.arrowWidth,
+	    lineOpacity = props.lineOpacity,
+	    lineStroke = props.lineStroke;
 
-	const type = "horizontal";
-	const priceShowTolerance = 5;
 
-	let y = 0;
-	let show;
+	var x1 = 0,
+	    x2 = width;
+	var edgeAt = at === "right" ? width : 0;
 
-	if (price < (upperPrice + priceShowTolerance)
-			|| price > (lowerPrice - priceShowTolerance)) {
-		y = (price / rangeSlope) + (lowerYValue - (lowerPrice / rangeSlope));
+	var type = "horizontal";
+	var priceShowTolerance = 5;
+
+	var y = 0;
+	var show = void 0;
+
+	if (price < upperPrice + priceShowTolerance || price > lowerPrice - priceShowTolerance) {
+		y = price / rangeSlope + (lowerYValue - lowerPrice / rangeSlope);
 		show = true;
-	}	else {
+	} else {
 		show = false;
 	}
 
-	const coordinate = displayFormat(yScale.invert(y));
-	const hideLine = false;
+	var coordinate = displayFormat(yScale.invert(y));
+	var hideLine = false;
 
-	const coordinateProps = {
-		coordinate,
-		show,
-		type,
-		orient,
-		edgeAt,
-		hideLine,
-		lineOpacity,
-		lineStroke,
-		fill: functor(fill)(price),
-		textFill: functor(textFill)(price),
-		opacity, fontFamily, fontSize,
-		rectWidth,
-		rectHeight,
-		arrowWidth,
-		dx,
-		x1,
-		x2,
+	var coordinateProps = {
+		coordinate: coordinate,
+		show: show,
+		type: type,
+		orient: orient,
+		edgeAt: edgeAt,
+		hideLine: hideLine,
+		lineOpacity: lineOpacity,
+		lineStroke: lineStroke,
+		fill: (0, _utils.functor)(fill)(price),
+		textFill: (0, _utils.functor)(textFill)(price),
+		opacity: opacity, fontFamily: fontFamily, fontSize: fontSize,
+		rectWidth: rectWidth,
+		rectHeight: rectHeight,
+		arrowWidth: arrowWidth,
+		dx: dx,
+		x1: x1,
+		x2: x2,
 		y1: y,
-		y2: y,
+		y2: y
 	};
 	return coordinateProps;
 }
 
-export default PriceCoordinate;
+exports.default = PriceCoordinate;
+//# sourceMappingURL=PriceCoordinate.js.map

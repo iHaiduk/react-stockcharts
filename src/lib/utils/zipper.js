@@ -2,23 +2,33 @@
 
 /* an extension to d3.zip so we call a function instead of an array */
 
-import { min } from "d3-array";
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = zipper;
 
-import identity from "./identity";
+var _d3Array = require("d3-array");
 
-export default function zipper() {
-	let combine = identity;
+var _identity = require("./identity");
+
+var _identity2 = _interopRequireDefault(_identity);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function zipper() {
+	var combine = _identity2.default;
 
 	function zip() {
-		const n = arguments.length;
+		var n = arguments.length;
 		if (!n) return [];
-		const m = min(arguments, d3_zipLength);
+		var m = (0, _d3Array.min)(arguments, d3_zipLength);
 
 		// eslint-disable-next-line prefer-const
-		let i, zips = new Array(m);
-		for (i = -1; ++i < m; ) {
-			for (let j = -1, zip = zips[i] = new Array(n); ++j < n; ) {
-				zip[j] = arguments[j][i];
+		var i = void 0,
+		    zips = new Array(m);
+		for (i = -1; ++i < m;) {
+			for (var j = -1, _zip = zips[i] = new Array(n); ++j < n;) {
+				_zip[j] = arguments[j][i];
 			}
 			zips[i] = combine.apply(this, zips[i]);
 		}
@@ -27,7 +37,7 @@ export default function zipper() {
 	function d3_zipLength(d) {
 		return d.length;
 	}
-	zip.combine = function(x) {
+	zip.combine = function (x) {
 		if (!arguments.length) {
 			return combine;
 		}
@@ -36,3 +46,4 @@ export default function zipper() {
 	};
 	return zip;
 }
+//# sourceMappingURL=zipper.js.map

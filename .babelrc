@@ -1,10 +1,12 @@
 {
 	"presets": [
 		"react",
-		"stage-3"
+        "react-optimize",
+		"stage-0"
 	],
 	"plugins": [
-		"transform-flow-strip-types"
+		"transform-flow-strip-types",
+        "transform-react-remove-prop-types"
 	],
 	"env": {
 		"cjs": {

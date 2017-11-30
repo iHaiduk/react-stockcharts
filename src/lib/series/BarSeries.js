@@ -1,89 +1,101 @@
 "use strict";
 
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 
-import GenericChartComponent from "../GenericChartComponent";
-import { getAxisCanvas } from "../GenericComponent";
+var _jsx = function () { var REACT_ELEMENT_TYPE = typeof Symbol === "function" && Symbol.for && Symbol.for("react.element") || 0xeac7; return function createRawReactElement(type, props, key, children) { var defaultProps = type && type.defaultProps; var childrenLength = arguments.length - 3; if (!props && childrenLength !== 0) { props = {}; } if (props && defaultProps) { for (var propName in defaultProps) { if (props[propName] === void 0) { props[propName] = defaultProps[propName]; } } } else if (!props) { props = defaultProps || {}; } if (childrenLength === 1) { props.children = children; } else if (childrenLength > 1) { var childArray = Array(childrenLength); for (var i = 0; i < childrenLength; i++) { childArray[i] = arguments[i + 3]; } props.children = childArray; } return { $$typeof: REACT_ELEMENT_TYPE, type: type, key: key === undefined ? null : '' + key, ref: null, props: props, _owner: null }; }; }();
 
-import StackedBarSeries, {
-	drawOnCanvasHelper,
-	drawOnCanvas2,
-	getBarsSVG2,
-	svgHelper,
-	identityStack
-} from "./StackedBarSeries";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-import { functor } from "../utils";
+var _react = require("react");
 
-class BarSeries extends Component {
-	constructor(props) {
-		super(props);
-		this.renderSVG = this.renderSVG.bind(this);
-		this.drawOnCanvas = this.drawOnCanvas.bind(this);
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = require("prop-types");
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _GenericChartComponent = require("../GenericChartComponent");
+
+var _GenericChartComponent2 = _interopRequireDefault(_GenericChartComponent);
+
+var _GenericComponent = require("../GenericComponent");
+
+var _StackedBarSeries = require("./StackedBarSeries");
+
+var _StackedBarSeries2 = _interopRequireDefault(_StackedBarSeries);
+
+var _utils = require("../utils");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var BarSeries = function (_Component) {
+	_inherits(BarSeries, _Component);
+
+	function BarSeries(props) {
+		_classCallCheck(this, BarSeries);
+
+		var _this = _possibleConstructorReturn(this, (BarSeries.__proto__ || Object.getPrototypeOf(BarSeries)).call(this, props));
+
+		_this.renderSVG = _this.renderSVG.bind(_this);
+		_this.drawOnCanvas = _this.drawOnCanvas.bind(_this);
+		return _this;
 	}
-	drawOnCanvas(ctx, moreProps) {
 
-		if (this.props.swapScales) {
-			const { xAccessor } = moreProps;
-			drawOnCanvasHelper(ctx, this.props, moreProps, xAccessor, identityStack);
-		} else {
-			const bars = getBars(this.props, moreProps);
-			drawOnCanvas2(this.props, ctx, bars);
+	_createClass(BarSeries, [{
+		key: "drawOnCanvas",
+		value: function drawOnCanvas(ctx, moreProps) {
+
+			if (this.props.swapScales) {
+				var xAccessor = moreProps.xAccessor;
+
+				(0, _StackedBarSeries.drawOnCanvasHelper)(ctx, this.props, moreProps, xAccessor, _StackedBarSeries.identityStack);
+			} else {
+				var bars = getBars(this.props, moreProps);
+				(0, _StackedBarSeries.drawOnCanvas2)(this.props, ctx, bars);
+			}
 		}
+	}, {
+		key: "renderSVG",
+		value: function renderSVG(moreProps) {
+			if (this.props.swapScales) {
+				var xAccessor = moreProps.xAccessor;
 
-	}
-	renderSVG(moreProps) {
-		if (this.props.swapScales) {
-			const { xAccessor } = moreProps;
-			return <g>{svgHelper(this.props, moreProps, xAccessor, identityStack)}</g>;
-		} else {
-			const bars = getBars(this.props, moreProps);
-			return <g>{getBarsSVG2(this.props, bars)}</g>;
+				return _jsx("g", {}, void 0, (0, _StackedBarSeries.svgHelper)(this.props, moreProps, xAccessor, _StackedBarSeries.identityStack));
+			} else {
+				var bars = getBars(this.props, moreProps);
+				return _jsx("g", {}, void 0, (0, _StackedBarSeries.getBarsSVG2)(this.props, bars));
+			}
 		}
-
-	}
-	render() {
-		const { clip } = this.props;
-
-		return <GenericChartComponent
-			clip={clip}
-			svgDraw={this.renderSVG}
-
-			canvasToDraw={getAxisCanvas}
-			canvasDraw={this.drawOnCanvas}
-
-			drawOn={["pan"]}
-		/>;
-	}
-}
-
-BarSeries.propTypes = {
-	baseAt: PropTypes.oneOfType([
-		PropTypes.number,
-		PropTypes.func,
-	]),
-	stroke: PropTypes.bool,
-	width: PropTypes.oneOfType([
-		PropTypes.number,
-		PropTypes.func
-	]),
-	yAccessor: PropTypes.func.isRequired,
-	opacity: PropTypes.number,
-	fill: PropTypes.oneOfType([
-		PropTypes.func, PropTypes.string
-	]),
-	className: PropTypes.oneOfType([
-		PropTypes.func, PropTypes.string
-	]),
-	clip: PropTypes.bool,
-	swapScales: PropTypes.bool,
-};
+	}, {
+		key: "render",
+		value: function render() {
+			var clip = this.props.clip;
 
 
-BarSeries.defaultProps = StackedBarSeries.defaultProps;
+			return _jsx(_GenericChartComponent2.default, {
+				clip: clip,
+				svgDraw: this.renderSVG,
+				canvasToDraw: _GenericComponent.getAxisCanvas,
+				canvasDraw: this.drawOnCanvas,
+				drawOn: ["pan"]
+			});
+		}
+	}]);
 
-export default BarSeries;
+	return BarSeries;
+}(_react.Component);
+
+BarSeries.defaultProps = _StackedBarSeries2.default.defaultProps;
+
+exports.default = BarSeries;
 
 /*
  Initially, this program was using StackedBarSeries.getBars
@@ -95,50 +107,58 @@ export default BarSeries;
  This function contains just the necessary logic
  to create bars
 */
+
 function getBars(props, moreProps) {
-	const { baseAt, fill, stroke, yAccessor } = props;
-	const { xScale, xAccessor, plotData, chartConfig: { yScale } } = moreProps;
+	var baseAt = props.baseAt,
+	    fill = props.fill,
+	    stroke = props.stroke,
+	    yAccessor = props.yAccessor;
+	var xScale = moreProps.xScale,
+	    xAccessor = moreProps.xAccessor,
+	    plotData = moreProps.plotData,
+	    yScale = moreProps.chartConfig.yScale;
 
-	const getFill = functor(fill);
-	const getBase = functor(baseAt);
 
-	const widthFunctor = functor(props.width);
+	var getFill = (0, _utils.functor)(fill);
+	var getBase = (0, _utils.functor)(baseAt);
 
-	const width = widthFunctor(props, {
-		xScale,
-		xAccessor,
-		plotData
+	var widthFunctor = (0, _utils.functor)(props.width);
+
+	var width = widthFunctor(props, {
+		xScale: xScale,
+		xAccessor: xAccessor,
+		plotData: plotData
 	});
 
 	/*
-	const barWidth = Math.round(width);
-	const offset = Math.round(barWidth === 1 ? 0 : 0.5 * barWidth);
-	*/
-	const offset = Math.floor(0.5 * width);
+ const barWidth = Math.round(width);
+ const offset = Math.round(barWidth === 1 ? 0 : 0.5 * barWidth);
+ */
+	var offset = Math.floor(0.5 * width);
 
-	const bars = plotData
-		.map(d => {
-			const yValue = yAccessor(d);
-			let y = yScale(yValue);
+	var bars = plotData.map(function (d) {
+		var yValue = yAccessor(d);
+		var y = yScale(yValue);
 
-			const x = Math.round(xScale(xAccessor(d))) - offset;
-			let h = getBase(xScale, yScale, d) - yScale(yValue);
+		var x = Math.round(xScale(xAccessor(d))) - offset;
+		var h = getBase(xScale, yScale, d) - yScale(yValue);
 
-			if (h < 0) {
-				y = y + h;
-				h = -h;
-			}
+		if (h < 0) {
+			y = y + h;
+			h = -h;
+		}
 
-			return {
-				// type: "line"
-				x,
-				y: Math.round(y),
-				height: Math.round(h),
-				width: offset * 2,
-				fill: getFill(d, 0),
-				stroke: stroke ? getFill(d, 0) : "none",
-			};
-		});
+		return {
+			// type: "line"
+			x: x,
+			y: Math.round(y),
+			height: Math.round(h),
+			width: offset * 2,
+			fill: getFill(d, 0),
+			stroke: stroke ? getFill(d, 0) : "none"
+		};
+	});
 
 	return bars;
 }
+//# sourceMappingURL=BarSeries.js.map

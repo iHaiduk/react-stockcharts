@@ -1,70 +1,119 @@
 "use strict";
 
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 
-import LineSeries from "./LineSeries";
-import AreaOnlySeries from "./AreaOnlySeries";
+var _jsx = function () { var REACT_ELEMENT_TYPE = typeof Symbol === "function" && Symbol.for && Symbol.for("react.element") || 0xeac7; return function createRawReactElement(type, props, key, children) { var defaultProps = type && type.defaultProps; var childrenLength = arguments.length - 3; if (!props && childrenLength !== 0) { props = {}; } if (props && defaultProps) { for (var propName in defaultProps) { if (props[propName] === void 0) { props[propName] = defaultProps[propName]; } } } else if (!props) { props = defaultProps || {}; } if (childrenLength === 1) { props.children = children; } else if (childrenLength > 1) { var childArray = Array(childrenLength); for (var i = 0; i < childrenLength; i++) { childArray[i] = arguments[i + 3]; } props.children = childArray; } return { $$typeof: REACT_ELEMENT_TYPE, type: type, key: key === undefined ? null : '' + key, ref: null, props: props, _owner: null }; }; }();
 
-class BollingerSeries extends Component {
-	constructor(props) {
-		super(props);
-		this.yAccessorForTop = this.yAccessorForTop.bind(this);
-		this.yAccessorForMiddle = this.yAccessorForMiddle.bind(this);
-		this.yAccessorForBottom = this.yAccessorForBottom.bind(this);
-		this.yAccessorForScalledBottom = this.yAccessorForScalledBottom.bind(this);
-	}
-	yAccessorForTop(d) {
-		const { yAccessor } = this.props;
-		return yAccessor(d) && yAccessor(d).top;
-	}
-	yAccessorForMiddle(d) {
-		const { yAccessor } = this.props;
-		return yAccessor(d) && yAccessor(d).middle;
-	}
-	yAccessorForBottom(d) {
-		const { yAccessor } = this.props;
-		return yAccessor(d) && yAccessor(d).bottom;
-	}
-	yAccessorForScalledBottom(scale, d) {
-		const { yAccessor } = this.props;
-		return scale(yAccessor(d) && yAccessor(d).bottom);
-	}
-	render() {
-		const { areaClassName, className, opacity } = this.props;
-		const { stroke, fill } = this.props;
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-		return (
-			<g className={className}>
-				<LineSeries yAccessor={this.yAccessorForTop}
-					stroke={stroke.top} fill="none" />
-				<LineSeries yAccessor={this.yAccessorForMiddle}
-					stroke={stroke.middle} fill="none" />
-				<LineSeries yAccessor={this.yAccessorForBottom}
-					stroke={stroke.bottom} fill="none" />
-				<AreaOnlySeries className={areaClassName}
-					yAccessor={this.yAccessorForTop}
-					base={this.yAccessorForScalledBottom}
-					stroke="none" fill={fill}
-					opacity={opacity} />
-			</g>
-		);
-	}
-}
+var _react = require("react");
 
-BollingerSeries.propTypes = {
-	yAccessor: PropTypes.func.isRequired,
-	className: PropTypes.string,
-	areaClassName: PropTypes.string,
-	opacity: PropTypes.number,
-	type: PropTypes.string,
-	stroke: PropTypes.shape({
-		top: PropTypes.string.isRequired,
-		middle: PropTypes.string.isRequired,
-		bottom: PropTypes.string.isRequired,
-	}).isRequired,
-	fill: PropTypes.string.isRequired,
-};
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = require("prop-types");
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _LineSeries = require("./LineSeries");
+
+var _LineSeries2 = _interopRequireDefault(_LineSeries);
+
+var _AreaOnlySeries = require("./AreaOnlySeries");
+
+var _AreaOnlySeries2 = _interopRequireDefault(_AreaOnlySeries);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var BollingerSeries = function (_Component) {
+	_inherits(BollingerSeries, _Component);
+
+	function BollingerSeries(props) {
+		_classCallCheck(this, BollingerSeries);
+
+		var _this = _possibleConstructorReturn(this, (BollingerSeries.__proto__ || Object.getPrototypeOf(BollingerSeries)).call(this, props));
+
+		_this.yAccessorForTop = _this.yAccessorForTop.bind(_this);
+		_this.yAccessorForMiddle = _this.yAccessorForMiddle.bind(_this);
+		_this.yAccessorForBottom = _this.yAccessorForBottom.bind(_this);
+		_this.yAccessorForScalledBottom = _this.yAccessorForScalledBottom.bind(_this);
+		return _this;
+	}
+
+	_createClass(BollingerSeries, [{
+		key: "yAccessorForTop",
+		value: function yAccessorForTop(d) {
+			var yAccessor = this.props.yAccessor;
+
+			return yAccessor(d) && yAccessor(d).top;
+		}
+	}, {
+		key: "yAccessorForMiddle",
+		value: function yAccessorForMiddle(d) {
+			var yAccessor = this.props.yAccessor;
+
+			return yAccessor(d) && yAccessor(d).middle;
+		}
+	}, {
+		key: "yAccessorForBottom",
+		value: function yAccessorForBottom(d) {
+			var yAccessor = this.props.yAccessor;
+
+			return yAccessor(d) && yAccessor(d).bottom;
+		}
+	}, {
+		key: "yAccessorForScalledBottom",
+		value: function yAccessorForScalledBottom(scale, d) {
+			var yAccessor = this.props.yAccessor;
+
+			return scale(yAccessor(d) && yAccessor(d).bottom);
+		}
+	}, {
+		key: "render",
+		value: function render() {
+			var _props = this.props,
+			    areaClassName = _props.areaClassName,
+			    className = _props.className,
+			    opacity = _props.opacity;
+			var _props2 = this.props,
+			    stroke = _props2.stroke,
+			    fill = _props2.fill;
+
+
+			return _jsx("g", {
+				className: className
+			}, void 0, _jsx(_LineSeries2.default, {
+				yAccessor: this.yAccessorForTop,
+				stroke: stroke.top,
+				fill: "none"
+			}), _jsx(_LineSeries2.default, {
+				yAccessor: this.yAccessorForMiddle,
+				stroke: stroke.middle,
+				fill: "none"
+			}), _jsx(_LineSeries2.default, {
+				yAccessor: this.yAccessorForBottom,
+				stroke: stroke.bottom,
+				fill: "none"
+			}), _jsx(_AreaOnlySeries2.default, {
+				className: areaClassName,
+				yAccessor: this.yAccessorForTop,
+				base: this.yAccessorForScalledBottom,
+				stroke: "none",
+				fill: fill,
+				opacity: opacity
+			}));
+		}
+	}]);
+
+	return BollingerSeries;
+}(_react.Component);
 
 BollingerSeries.defaultProps = {
 	className: "react-stockcharts-bollinger-band-series",
@@ -72,4 +121,5 @@ BollingerSeries.defaultProps = {
 	opacity: 0.2
 };
 
-export default BollingerSeries;
+exports.default = BollingerSeries;
+//# sourceMappingURL=BollingerSeries.js.map

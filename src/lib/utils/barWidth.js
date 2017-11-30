@@ -1,6 +1,12 @@
 "use strict";
 
-import { head, last } from "../utils";
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.plotDataLengthBarWidth = plotDataLengthBarWidth;
+exports.timeIntervalBarWidth = timeIntervalBarWidth;
+
+var _utils = require("../utils");
 
 /**
  * Bar width is based on the amount of items in the plot data and the distance between the first and last of those
@@ -9,12 +15,16 @@ import { head, last } from "../utils";
  * @param moreProps an object holding the xScale, xAccessor and plotData.
  * @return {number} the bar width.
  */
-export function plotDataLengthBarWidth(props, moreProps) {
-	const { widthRatio: widthRatio = 0.8 } = props;
-	const { xScale: scale, xAccessor: accessor, plotData } = moreProps;
+function plotDataLengthBarWidth(props, moreProps) {
+  var _props$widthRatio = props.widthRatio,
+      widthRatio = _props$widthRatio === undefined ? 0.8 : _props$widthRatio;
+  var scale = moreProps.xScale,
+      accessor = moreProps.xAccessor,
+      plotData = moreProps.plotData;
 
-	const width = Math.abs((scale(accessor(last(plotData))) - scale(accessor(head(plotData)))) / (plotData.length - 1));
-	return width * widthRatio;
+
+  var width = Math.abs((scale(accessor((0, _utils.last)(plotData))) - scale(accessor((0, _utils.head)(plotData)))) / (plotData.length - 1));
+  return width * widthRatio;
 }
 
 /**
@@ -22,12 +32,17 @@ export function plotDataLengthBarWidth(props, moreProps) {
  * @param interval a d3-time time interval.
  * @return {Function} the width function.
  */
-export function timeIntervalBarWidth(interval) {
-	return function(props, moreProps) {
-		const { widthRatio: widthRatio = 0.8 } = props;
-		const { xScale: scale, xAccessor: accessor, plotData } = moreProps;
+function timeIntervalBarWidth(interval) {
+  return function (props, moreProps) {
+    var _props$widthRatio2 = props.widthRatio,
+        widthRatio = _props$widthRatio2 === undefined ? 0.8 : _props$widthRatio2;
+    var scale = moreProps.xScale,
+        accessor = moreProps.xAccessor,
+        plotData = moreProps.plotData;
 
-		const first = accessor(head(plotData));
-		return Math.abs(scale(interval.offset(first, 1)) - scale(first)) * widthRatio;
-	};
+
+    var first = accessor((0, _utils.head)(plotData));
+    return Math.abs(scale(interval.offset(first, 1)) - scale(first)) * widthRatio;
+  };
 }
+//# sourceMappingURL=barWidth.js.map

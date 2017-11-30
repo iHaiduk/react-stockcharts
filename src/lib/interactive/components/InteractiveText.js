@@ -1,182 +1,206 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+"use strict";
 
-import GenericChartComponent from "../../GenericChartComponent";
-import { getMouseCanvas } from "../../GenericComponent";
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 
-import { isDefined, noop, hexToRGBA } from "../../utils";
+var _jsx = function () { var REACT_ELEMENT_TYPE = typeof Symbol === "function" && Symbol.for && Symbol.for("react.element") || 0xeac7; return function createRawReactElement(type, props, key, children) { var defaultProps = type && type.defaultProps; var childrenLength = arguments.length - 3; if (!props && childrenLength !== 0) { props = {}; } if (props && defaultProps) { for (var propName in defaultProps) { if (props[propName] === void 0) { props[propName] = defaultProps[propName]; } } } else if (!props) { props = defaultProps || {}; } if (childrenLength === 1) { props.children = children; } else if (childrenLength > 1) { var childArray = Array(childrenLength); for (var i = 0; i < childrenLength; i++) { childArray[i] = arguments[i + 3]; } props.children = childArray; } return { $$typeof: REACT_ELEMENT_TYPE, type: type, key: key === undefined ? null : '' + key, ref: null, props: props, _owner: null }; }; }();
 
-class InteractiveText extends Component {
-	constructor(props) {
-		super(props);
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-		this.calculateTextWidth = true;
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-		this.renderSVG = this.renderSVG.bind(this);
-		this.drawOnCanvas = this.drawOnCanvas.bind(this);
-		this.isHover = this.isHover.bind(this);
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = require("prop-types");
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _GenericChartComponent = require("../../GenericChartComponent");
+
+var _GenericChartComponent2 = _interopRequireDefault(_GenericChartComponent);
+
+var _GenericComponent = require("../../GenericComponent");
+
+var _utils = require("../../utils");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var InteractiveText = function (_Component) {
+	_inherits(InteractiveText, _Component);
+
+	function InteractiveText(props) {
+		_classCallCheck(this, InteractiveText);
+
+		var _this = _possibleConstructorReturn(this, (InteractiveText.__proto__ || Object.getPrototypeOf(InteractiveText)).call(this, props));
+
+		_this.calculateTextWidth = true;
+
+		_this.renderSVG = _this.renderSVG.bind(_this);
+		_this.drawOnCanvas = _this.drawOnCanvas.bind(_this);
+		_this.isHover = _this.isHover.bind(_this);
+		return _this;
 	}
-	isHover(moreProps) {
-		const { onHover } = this.props;
 
-		if (
-			isDefined(onHover)
-			&& isDefined(this.textWidth)
-			&& !this.calculateTextWidth
-		) {
-			const { rect } = helper(this.props, moreProps, this.textWidth);
-			const { mouseXY: [x, y] } = moreProps;
+	_createClass(InteractiveText, [{
+		key: "isHover",
+		value: function isHover(moreProps) {
+			var onHover = this.props.onHover;
 
-			if (
-				x >= rect.x
-				&& y >= rect.y
-				&& x <= rect.x + rect.width
-				&& y <= rect.y + rect.height
-			) {
-				return true;
+
+			if ((0, _utils.isDefined)(onHover) && (0, _utils.isDefined)(this.textWidth) && !this.calculateTextWidth) {
+				var _helper = helper(this.props, moreProps, this.textWidth),
+				    rect = _helper.rect;
+
+				var _moreProps$mouseXY = _slicedToArray(moreProps.mouseXY, 2),
+				    x = _moreProps$mouseXY[0],
+				    y = _moreProps$mouseXY[1];
+
+				if (x >= rect.x && y >= rect.y && x <= rect.x + rect.width && y <= rect.y + rect.height) {
+					return true;
+				}
 			}
+			return false;
 		}
-		return false;
-	}
-	componentWillReceiveProps(nextProps) {
-		this.calculateTextWidth = (
-			nextProps.text !== this.props.text
-			|| nextProps.fontStyle !== this.props.fontStyle
-			|| nextProps.fontWeight !== this.props.fontWeight
-			|| nextProps.fontSize !== this.props.fontSize
-			|| nextProps.fontFamily !== this.props.fontFamily
-		);
-	}
-	drawOnCanvas(ctx, moreProps) {
-		const {
-			bgFill,
-			bgOpacity,
-			textFill,
-			fontFamily,
-			fontSize,
-			fontStyle,
-			fontWeight,
-			text,
-		} = this.props;
-
-		if (this.calculateTextWidth) {
-			ctx.font = `${fontStyle} ${fontWeight} ${fontSize}px ${fontFamily}`;
-			const { width } = ctx.measureText(text);
-			this.textWidth = width;
-			this.calculateTextWidth = false;
+	}, {
+		key: "componentWillReceiveProps",
+		value: function componentWillReceiveProps(nextProps) {
+			this.calculateTextWidth = nextProps.text !== this.props.text || nextProps.fontStyle !== this.props.fontStyle || nextProps.fontWeight !== this.props.fontWeight || nextProps.fontSize !== this.props.fontSize || nextProps.fontFamily !== this.props.fontFamily;
 		}
+	}, {
+		key: "drawOnCanvas",
+		value: function drawOnCanvas(ctx, moreProps) {
+			var _props = this.props,
+			    bgFill = _props.bgFill,
+			    bgOpacity = _props.bgOpacity,
+			    textFill = _props.textFill,
+			    fontFamily = _props.fontFamily,
+			    fontSize = _props.fontSize,
+			    fontStyle = _props.fontStyle,
+			    fontWeight = _props.fontWeight,
+			    text = _props.text;
 
-		const { selected } = this.props;
 
-		const { x, y, rect } = helper(this.props, moreProps, this.textWidth);
+			if (this.calculateTextWidth) {
+				ctx.font = fontStyle + " " + fontWeight + " " + fontSize + "px " + fontFamily;
 
-		ctx.fillStyle = hexToRGBA(bgFill, bgOpacity);
+				var _ctx$measureText = ctx.measureText(text),
+				    width = _ctx$measureText.width;
 
-		ctx.beginPath();
-		ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
+				this.textWidth = width;
+				this.calculateTextWidth = false;
+			}
 
-		if (selected) {
-			ctx.strokeStyle = textFill;
-			ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+			var selected = this.props.selected;
+
+			var _helper2 = helper(this.props, moreProps, this.textWidth),
+			    x = _helper2.x,
+			    y = _helper2.y,
+			    rect = _helper2.rect;
+
+			ctx.fillStyle = (0, _utils.hexToRGBA)(bgFill, bgOpacity);
+
+			ctx.beginPath();
+			ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
+
+			if (selected) {
+				ctx.strokeStyle = textFill;
+				ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+			}
+
+			ctx.fillStyle = textFill;
+			ctx.textBaseline = "middle";
+			ctx.textAlign = "center";
+			ctx.font = fontStyle + " " + fontWeight + " " + fontSize + "px " + fontFamily;
+
+			ctx.beginPath();
+			ctx.fillText(text, x, y);
 		}
+	}, {
+		key: "renderSVG",
+		value: function renderSVG() {
+			throw new Error("svg not implemented");
+		}
+	}, {
+		key: "render",
+		value: function render() {
+			var _props2 = this.props,
+			    selected = _props2.selected,
+			    interactiveCursorClass = _props2.interactiveCursorClass;
+			var _props3 = this.props,
+			    onHover = _props3.onHover,
+			    onUnHover = _props3.onUnHover;
+			var _props4 = this.props,
+			    onDragStart = _props4.onDragStart,
+			    onDrag = _props4.onDrag,
+			    onDragComplete = _props4.onDragComplete;
 
-		ctx.fillStyle = textFill;
-		ctx.textBaseline = "middle";
-		ctx.textAlign = "center";
-		ctx.font = `${fontStyle} ${fontWeight} ${fontSize}px ${fontFamily}`;
 
-		ctx.beginPath();
-		ctx.fillText(text, x, y);
-	}
-	renderSVG() {
-		throw new Error("svg not implemented");
-	}
-	render() {
-		const { selected, interactiveCursorClass } = this.props;
-		const { onHover, onUnHover } = this.props;
-		const { onDragStart, onDrag, onDragComplete } = this.props;
+			return _jsx(_GenericChartComponent2.default, {
+				isHover: this.isHover,
+				svgDraw: this.renderSVG,
+				canvasToDraw: _GenericComponent.getMouseCanvas,
+				canvasDraw: this.drawOnCanvas,
+				interactiveCursorClass: interactiveCursorClass,
+				selected: selected,
+				onDragStart: onDragStart,
+				onDrag: onDrag,
+				onDragComplete: onDragComplete,
+				onHover: onHover,
+				onUnHover: onUnHover,
+				drawOn: ["mousemove", "mouseleave", "pan", "drag"]
+			});
+		}
+	}]);
 
-		return <GenericChartComponent
-			isHover={this.isHover}
-
-			svgDraw={this.renderSVG}
-			canvasToDraw={getMouseCanvas}
-			canvasDraw={this.drawOnCanvas}
-
-			interactiveCursorClass={interactiveCursorClass}
-			selected={selected}
-
-			onDragStart={onDragStart}
-			onDrag={onDrag}
-			onDragComplete={onDragComplete}
-			onHover={onHover}
-			onUnHover={onUnHover}
-
-			drawOn={["mousemove", "mouseleave", "pan", "drag"]}
-		/>;
-	}
-}
+	return InteractiveText;
+}(_react.Component);
 
 function helper(props, moreProps, textWidth) {
-	const { position, fontSize } = props;
+	var position = props.position,
+	    fontSize = props.fontSize;
+	var xScale = moreProps.xScale,
+	    yScale = moreProps.chartConfig.yScale;
 
-	const { xScale, chartConfig: { yScale } } = moreProps;
+	var _position = _slicedToArray(position, 2),
+	    xValue = _position[0],
+	    yValue = _position[1];
 
-	const [xValue, yValue] = position;
-	const x = xScale(xValue);
-	const y = yScale(yValue);
+	var x = xScale(xValue);
+	var y = yScale(yValue);
 
-	const rect = {
+	var rect = {
 		x: x - textWidth / 2 - fontSize,
 		y: y - fontSize,
 		width: textWidth + fontSize * 2,
-		height: fontSize * 2,
+		height: fontSize * 2
 	};
 
 	return {
-		x, y, rect
+		x: x, y: y, rect: rect
 	};
 }
 
-InteractiveText.propTypes = {
-	bgFill: PropTypes.string.isRequired,
-	bgOpacity: PropTypes.number.isRequired,
-
-	textFill: PropTypes.string.isRequired,
-	fontFamily: PropTypes.string.isRequired,
-	fontSize: PropTypes.number.isRequired,
-	fontWeight: PropTypes.oneOfType([
-		PropTypes.number,
-		PropTypes.string,
-	]).isRequired,
-	fontStyle: PropTypes.string.isRequired,
-
-	text: PropTypes.string.isRequired,
-
-	onDragStart: PropTypes.func.isRequired,
-	onDrag: PropTypes.func.isRequired,
-	onDragComplete: PropTypes.func.isRequired,
-	onHover: PropTypes.func,
-	onUnHover: PropTypes.func,
-
-	defaultClassName: PropTypes.string,
-	interactiveCursorClass: PropTypes.string,
-
-	tolerance: PropTypes.number.isRequired,
-	selected: PropTypes.bool.isRequired,
-};
-
 InteractiveText.defaultProps = {
-	onDragStart: noop,
-	onDrag: noop,
-	onDragComplete: noop,
+	onDragStart: _utils.noop,
+	onDrag: _utils.noop,
+	onDragComplete: _utils.noop,
 
 	type: "SD", // standard dev
 	fontWeight: "normal", // standard dev
 
 	strokeWidth: 1,
 	tolerance: 4,
-	selected: false,
+	selected: false
 };
 
-export default InteractiveText;
+exports.default = InteractiveText;
+//# sourceMappingURL=InteractiveText.js.map
